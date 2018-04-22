@@ -97,7 +97,6 @@ public class WebCrawlerProcessor {
 		CompletableFuture
 				.supplyAsync(() -> downloadPageContentService.downloadPageContents(url),
 						ioBoundExecutorService)
-				.whenComplete(this::handleResponseAndError)   //Handle exception gracefully and return graceful object
 				.thenApply(contentInfo -> applyTitleAndReturnLinks(contentInfo, thisParentNode, breadth)) // set title info on to the parent and limit the results by breadth
 				.thenApply(crawlFurtherAndLinkToParentNode(depth, breadth, alreadCrawledURLStore,
 						thisParentNode))    // For each page links fetch the details recursively and set to parent node
@@ -112,21 +111,6 @@ public class WebCrawlerProcessor {
 		return thisParentNode;
 
 	}
-	
-	private URLContentInfo handleResponseAndError(final URLContentInfo contents, final Throwable throwable) {
-	
-		if(throwable != null) {//if exception is not null then exit gracefully
-			URLContentInfo urlContent = new URLContentInfo();
-			urlContent.setUrl("Broken link");
-			urlContent.setTitle("Exception occured and title as exception message " + throwable.getMessage());
-			logger.error("Exception while fetching page details", throwable);
-			return urlContent;
-		}else {//No exception then result should be there
-			return contents;
-		}
-	
-	}
-	
 
 	private Set<String> applyTitleAndReturnLinks(final URLContentInfo contents, final ApiModelCrawlerNode parentNode,
 			final int breadth) {

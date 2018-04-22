@@ -3,7 +3,6 @@ package org.vijjayy.demo.springframework.boot.webcrawler.service;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -73,11 +72,11 @@ public class DownloadPageContentService {
 			return urlContent;
 			
 		} catch (Exception e) {
-			//Return as ContextedRuntimeException as it can hold exception with context
-			ContextedRuntimeException contextedRuntimeException = new ContextedRuntimeException(
-					"Exception while fetching page content details", e);
-			contextedRuntimeException.addContextValue("URL", url);
-			throw contextedRuntimeException;
+			URLContentInfo urlContent = new URLContentInfo();
+			urlContent.setUrl("Broken link");
+			urlContent.setTitle("Exception occured and title as exception message " + e.getMessage());
+			logger.error("Exception while fetching page details", e);
+			return urlContent;
 		}
 		
 	}

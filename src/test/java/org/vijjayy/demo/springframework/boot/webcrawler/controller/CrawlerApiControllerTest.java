@@ -60,34 +60,34 @@ public class CrawlerApiControllerTest {
 		Mockito.when(outboundGatewayService.downloadHtmlContents("http://www.example.org/depth/level3-1"))
 				.thenReturn(getHtmlContentFromMockFiles("classpath:mocks/level3-1.html"));
 		Mockito.when(outboundGatewayService.downloadHtmlContents("http://www.example.org/depth/level3-2"))
-		.thenReturn(getHtmlContentFromMockFiles("classpath:mocks/level3-2.html"));
+				.thenReturn(getHtmlContentFromMockFiles("classpath:mocks/level3-2.html"));
 		Mockito.when(outboundGatewayService.downloadHtmlContents("http://www.example.org/depth/level4-1"))
-		 .thenReturn(getHtmlContentFromMockFiles("classpath:mocks/level4-1.html"));
+				.thenReturn(getHtmlContentFromMockFiles("classpath:mocks/level4-1.html"));
 
-		
+		Mockito.when(outboundGatewayService.downloadHtmlContents("http://www.example.org/pagenotfound")).thenThrow(
+				new org.jsoup.HttpStatusException("Page not found", 400, "http://www.example.org/pagenotfound"));
+
 	}
 
 	@Test
 	public void shouldSuccess() {
-		
-		Response response = RestAssured
-				.given().port(port).when()
-				.get("/crawl?depth=5&breadth=5&url=http://example.com")
+
+		Response response = RestAssured.given().port(port).when().get("/crawl?depth=5&breadth=5&url=http://example.com")
 				.peek();
 
 		Assert.assertEquals(200, response.getStatusCode());
-		
+
 		ApiModelCrawlerNode responseObj = response.getBody().as(ApiModelCrawlerNode.class);
-		
+
 		assertNotNull(responseObj);
-		
-		//Form mappings for assertions
+
+		// Form mappings for assertions
 		Map<String, ApiModelCrawlerNode> urlAndNodeMappings = getMappings(responseObj);
-		
-		//Check depth 4 object exists
+
+		// Check depth 4 object exists
 		assertNotNull(urlAndNodeMappings.get("http://www.example.org/depth/level4-1"));
-		
-		//Check child node size
+
+		// Check child node size
 		assertEquals(3, urlAndNodeMappings.get("http://example.com").getNodes().size());
 		assertEquals(0, urlAndNodeMappings.get("http://www.example.org/depth/level1-1").getNodes().size());
 		assertEquals(1, urlAndNodeMappings.get("http://www.example.org/depth/level1-2").getNodes().size());
@@ -101,24 +101,29 @@ public class CrawlerApiControllerTest {
 		assertEquals(2, urlAndNodeMappings.get("http://www.example.org/depth/level3-1").getNodes().size());
 
 	}
-	
+
 	@Test
 	public void shouldFailAsBadRequestAsNoURLParamPassed() {
-		
-		Response response = RestAssured
-				.given().port(port).when()
-				.get("/crawl?depth=5&breadth=5")
-				.peek();
+
+		Response response = RestAssured.given().port(port).when().get("/crawl?depth=5&breadth=5").peek();
 
 		Assert.assertEquals(400, response.getStatusCode());
 
 	}
 
-	
+	@Test
+	public void shouldPassWithBrokenLinks() {
+
+		Response response = RestAssured.given().port(port).when().get("/crawl?depth=5&breadth=5&url=http://www.example.org/pagenotfound").peek();
+
+		Assert.assertEquals(200, response.getStatusCode());
+
+	}
+
 	private void traverse(Map<String, ApiModelCrawlerNode> map, ApiModelCrawlerNode node) {
 		map.put(node.getUrl(), node);
 		node.getNodes().stream().forEach(n -> traverse(map, n));
-		
+
 	}
 
 	private Map<String, ApiModelCrawlerNode> getMappings(ApiModelCrawlerNode result) {
@@ -127,7 +132,6 @@ public class CrawlerApiControllerTest {
 		return map;
 	}
 
-	
 	private String getHtmlContentFromMockFiles(String classpathFileLocation) {
 		try {
 			return IOUtils.toString(ResourceUtils.toURI(classpathFileLocation), Charset.defaultCharset());
