@@ -20,4 +20,4 @@ webcrawler.default:
   breadth:
     max.limit: 20
     limit: 10
-       
+  individual.page.download.timeout.in.millis: 5000     

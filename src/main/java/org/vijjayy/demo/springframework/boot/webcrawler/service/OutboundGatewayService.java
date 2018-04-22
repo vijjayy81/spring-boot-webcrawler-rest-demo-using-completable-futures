@@ -3,6 +3,7 @@ package org.vijjayy.demo.springframework.boot.webcrawler.service;
 import java.io.IOException;
 
 import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,8 +18,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class OutboundGatewayService {
 
+	@Value("${webcrawler.default.individual.page.download.timeout.in.millis}")
+	private int timeoutInMillis;
+	
 	public String downloadHtmlContents(String url) throws IOException {
-		return Jsoup.connect(url).timeout(5000).get().toString();
+		return Jsoup.connect(url).timeout(timeoutInMillis).get().toString();
 	}
 	
 }
