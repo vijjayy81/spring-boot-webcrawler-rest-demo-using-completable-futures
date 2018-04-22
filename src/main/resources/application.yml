@@ -1,0 +1,23 @@
+###########################################################################################################
+# 1.0 Spring Configuartions                                                                               #
+###########################################################################################################
+spring:
+  application:
+    name: spring-jpa-pagination-sorting-filtering-demo
+
+  cache:
+    ehcache:
+      config: classpath:ehcache.xml
+
+logging.config: classpath:logback.xml 
+
+debug: true
+   
+webcrawler.default:
+  depth:
+    max.limit: 5
+    limit: 2
+  breadth:
+    max.limit: 20
+    limit: 10
+       

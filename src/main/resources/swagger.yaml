@@ -1,0 +1,118 @@
+---
+swagger: '2.0'
+
+################################################################################
+#                       API Information                                        #
+################################################################################
+info:
+  version: "1.0"
+  title: Spring Boot Demo on WebCrawler using Completable Future 
+  description: Webcrawler with or without proxy configuration
+
+################################################################################
+#                  Host, Base Path, Schemes and Content Types                  #
+################################################################################
+host: localhost:8080
+basePath: /api/demo/webcrawler
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - "*/*" # We have only GET call
+
+################################################################################
+#                      Paths                                                    #
+################################################################################
+paths:
+
+  /crawl:
+    get:
+      tags:
+        - Crawler
+      description: Get Web Crawler details by url
+      operationId: GetWebCrawler
+      parameters:
+        - name: url
+          in: query
+          description: Query param for 'url'
+          required: true
+          type: string      
+        - name: depth
+          in: query
+          description: Query param for crawling depth level 
+          required: false
+          type: integer
+        - name: breadth
+          in: query
+          description: Query param for crawling breadth level 
+          required: false
+          type: integer
+      responses:
+        #Success
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/CrawlerNode'
+        # Client Errors
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ResponseErrorModel'
+        404:
+          description: Resource not found
+          schema:
+            $ref: '#/definitions/ResponseErrorModel'
+        # Server Errors
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ResponseErrorModel'  
+################################################################################
+#                           Definitions                                        #
+################################################################################
+definitions:
+
+  CrawlerNode:
+    type: object
+    description: Response model for crawler node
+    properties:
+      url:
+        type: string
+      title:
+        type: string
+      nodes:
+        type: array
+        items:
+          $ref: '#/definitions/CrawlerNode'
+        
+  #Response Error model
+  ResponseErrorModel:
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/ErrorModel'
+
+  # Individual Error Object
+  ErrorModel:
+    type: object
+    description:  Represents an individual error
+    required:
+      - code
+      - type
+    properties:
+      code:
+        description:  Error Code
+        type: string
+      message:
+        description:  Error Message
+        type: string
+      type:
+        description:  Error Message
+        type: string
+        enum: [ERROR, WARN, INFO]
+      details:
+        description: Comma separated list of fields, which caused the error condition
+        type: string

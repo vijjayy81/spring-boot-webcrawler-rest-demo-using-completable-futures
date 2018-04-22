@@ -1,0 +1,27 @@
+<configuration debug="false">
+	<appender name="Appender.Application.Logs"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date{yyyy-MM-dd'T'HH:mm:ss.SSS}, %level [%thread] %logger, %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- Use async appender as logging should not block crawling -->
+ 	<appender name="ASYNC-Appender.Application.Logs" class="ch.qos.logback.classic.AsyncAppender">
+    	<appender-ref ref="Appender.Application.Logs" />
+  	</appender>
+
+	<!-- Application Logger in DEBUG -->
+	<logger name="org.vijjayy.demo.springframework.boot.webcrawler" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="ASYNC-Appender.Application.Logs" />
+	</logger>
+	
+	<!-- Root logger ERROR -->
+	<root level="ERROR">
+		<appender-ref ref="ASYNC-Appender.Application.Logs" />
+	</root>
+
+</configuration>
+
+
