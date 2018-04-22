@@ -32,7 +32,7 @@ mvn spring-boot:run
 
 Pass all applicable jvm arguments
  
-mvn -D<jvmProperty>=<value> spring-boot:run
+mvn -D[jvmProperty]=[value] spring-boot:run
 
 
 ### Testing
@@ -41,9 +41,7 @@ Endpoint:
 
 http://localhost:8080/crawl?depth=5&breadth=10&url=https://example.com
 
-
-Query params:
-|   Param name       |Description           |
+|  Query Param name       |Description           |
 |----------------|------------------------|
 |url             | [Mandatory] url to crawl        |
 |depth | Depth of the page links to be crawled, default is 2 max 10  |
