@@ -50,5 +50,3 @@ Query params:
 |depth | Depth of the page links to be crawled, default is 2 max 10  |
 |breadth  | Max number of page links to be considered to crawl, default is 10 and max 20      |
 
-
-
