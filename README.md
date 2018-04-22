@@ -18,8 +18,7 @@ mvn spring-boot:run
 
 ### Internet With proxy
 
-JVM Properties:
-|   Property     |Description           
+|   JVM Property     |Description           
 |----------------|------------------------
 |http.proxyHost  | proxy host name        
 |https.proxyHost | https proxy host name  
