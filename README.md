@@ -4,9 +4,6 @@ An example application using Spring boot and Completable Future & EhCache
 
 ## Technology stack
 -   Spring Boot
--   Spring MVC
--   Spring Data JPA
--   Hibernate 5.x
 -   Swagger
 -   Spring Boot Test/JUnit/Mockito/RestAssured
 
@@ -22,16 +19,16 @@ mvn spring-boot:run
 ### Internet With proxy
 
 JVM Properties:
-|   Property       |Description           |
-|----------------|------------------------|
-|http.proxyHost  | proxy host name        |
-|https.proxyHost | https proxy host name  |
-|http.proxyPort  | proxy port number       |
-|https.proxyPort | https proxy port number |
-|http.proxyUser  | proxy user name         |
-|https.proxyUser | https proxy user name   |
-|http.proxyPassword  | proxy user password |
-|https.proxyPassword | https proxy user password |
+|   Property     |Description           
+|----------------|------------------------
+|http.proxyHost  | proxy host name        
+|https.proxyHost | https proxy host name  
+|http.proxyPort  | proxy port number      
+|https.proxyPort | https proxy port number
+|http.proxyUser  | proxy user name        
+|https.proxyUser | https proxy user name  
+|http.proxyPassword  | proxy user password
+|https.proxyPassword | https proxy user password
 
 
 Pass all applicable jvm arguments
